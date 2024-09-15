@@ -31,7 +31,7 @@
       <h2>Results</h2>
       <ul>
         {% for result in results %}
-          <li>Document: {{ result['document'] }} - Score: {{ result['score'] }}</li>
+          <li>Document: {{ result['document'] }} - Retrived Document Content:  <br>  {{ result['metadata']['content'] }}</li>
         {% endfor %}
       </ul>
     {% endif %}
