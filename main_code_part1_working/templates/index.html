@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Application</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --background: #f8fafc;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --error-bg: #fef2f2;
+            --error-text: #dc2626;
+            --success-color: #16a34a;
+            --highlight: #dbeafe;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+            background-color: var(--background);
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        .search-form {
+            background-color: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            margin-bottom: 24px;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .search-form:hover {
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+
+        h1 {
+            font-size: 1.875rem;
+            margin-top: 0;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .error {
+            color: var(--error-text);
+            padding: 16px;
+            margin: 16px 0;
+            border-radius: 8px;
+            background-color: var(--error-bg);
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            font-weight: 500;
+        }
+
+        .results {
+            background-color: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        .result-section {
+            margin-bottom: 32px;
+        }
+
+        .result-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            color: var(--text-primary);
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .result-count {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: normal;
+            background-color: var(--highlight);
+            padding: 4px 12px;
+            border-radius: 16px;
+        }
+
+        .result-item {
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .result-item:hover {
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .score {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-top: 8px;
+            display: inline-block;
+            background-color: var(--highlight);
+            padding: 4px 12px;
+            border-radius: 16px;
+        }
+
+        .ddg-result {
+            background-color: var(--card-bg);
+            padding: 20px;
+            margin-bottom: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .ddg-result:hover {
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .ddg-title {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 12px;
+            font-size: 1.125rem;
+            transition: color 0.3s ease;
+        }
+
+        .ddg-title:hover {
+            color: var(--primary-hover);
+        }
+
+        .ddg-snippet {
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .ddg-link {
+            color: var(--success-color);
+            font-size: 0.875rem;
+            word-break: break-all;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 16px;
+            }
+
+            .search-form,
+            .results {
+                padding: 16px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .ddg-result,
+            .result-item {
+                padding: 16px;
+            }
+        }
+
+        /* Loading state for button */
+        button.loading {
+            opacity: 0.8;
+            cursor: wait;
+        }
+    </style>
+</head>
+<body>
+    <div class="search-form">
+        <h1>Search Application</h1>
+        <form method="POST" action="{{ url_for('search') }}" id="searchForm">
+          
+            <div class="form-group">
+                <label for="text">Search Query:</label>
+                <input type="text" id="text" name="text" value="{{ last_query }}" required
+                    placeholder="Enter your search query...">
+            </div>
+            
+            <button type="submit" id="searchButton">
+                Search
+            </button>
+        </form>
+    </div>
+    {% if error %}
+    <div class="error" role="alert">
+        {{ error }}
+    </div>
+    {% endif %}
+
+    {% if results %}
+    <div class="results">
+        <h2>Search Results</h2>
+        
+        {% if results.pinecone %}
+        <div class="result-section">
+            <h3 class="section-title">
+                Database Results
+                <span class="result-count">{{ results.pinecone|length }} results</span>
+            </h3>
+            {% for result in results.pinecone %}
+            <div class="result-item">
+                <div class="content">{{ result.content }}</div>
+                <!-- <div class="score">Similarity Score: {{ "%.3f"|format(result.score) }}</div> -->
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if results.duckduckgo %}
+        <div class="result-section">
+            <h3 class="section-title">
+                Web Search Results
+                <span class="result-count">{{ results.duckduckgo|length }} results</span>
+            </h3>
+            {% for result in results.duckduckgo %}
+            <div class="ddg-result">
+                <a href="{{ result.link }}" class="ddg-title" target="_blank" rel="noopener noreferrer">
+                    {{ result.title }}
+                </a>
+                <div class="ddg-snippet">{{ result.snippet }}</div>
+                <div class="ddg-link">{{ result.link }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <script>
+        // Add loading state to button during form submission
+        document.getElementById('searchForm').addEventListener('submit', function() {
+            const button = document.getElementById('searchButton');
+            button.classList.add('loading');
+            button.textContent = 'Searching...';
+        });
+    </script>
+</body>
+</html>
