@@ -15,7 +15,9 @@ the given code is working ,
 
 3. make the process much faster and acurate - have to do after all desired function nality is added.
 
-4. will update on any task or to do things later. 
+4. will update on any task or to do things later.
+
+for now i think this will be a full stack + AI project 
 
 ----------
 
