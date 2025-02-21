@@ -1,0 +1,76 @@
+Below is the final version of the changelog note, including a dedicated section that describes what was present in the original code you provided at the very beginning, followed by all the subsequent changes and enhancements.
+
+---
+
+# Project Change Log
+
+**Project Name:** DocRec – Document Retrieval Chatbot
+
+---
+
+## 1. Original Code Baseline
+
+This section summarizes the original code that was provided at the start of the project:
+
+- **Core Functionality:**  
+  - Implemented a simple chatbot interface that allows users to search for information within a PDF document.
+  - The original code stored the PDF in a database and used the **pdfminer** library to extract text from the PDF.
+  - Utilized the **nltk** library to tokenize the extracted text.
+  - Employed **cosine similarity** for finding the most similar text chunk in response to a user query.
+  - Developed a Flask web interface that provided a basic search experience.
+  - Incorporated an LLM model (initially unspecified) to generate chatbot-like responses.
+  - Used Pinecone to store and retrieve vector embeddings of PDF content.
+
+---
+
+## 2. Changes & Enhancements
+
+### A. Document Retrieval Backend
+- Built a robust Flask backend to handle both document uploads and search queries.
+- Integrated the Pinecone vector database to store document embeddings for similarity-based search.
+
+### B. Text Extraction & Processing
+- Expanded file support to include PDF, DOCX, DOC, and TXT formats.
+- Implemented comprehensive text preprocessing (lowercasing, special character removal, tokenization, and stopword filtering).
+
+### C. Embedding Generation & Storage
+- Generated embeddings using SentenceTransformer (`all-mpnet-base-v2`).
+- Normalized embeddings and stored them in Pinecone along with metadata (including user_id) to allow for user-specific searches.
+
+### D. Unified Web Interface
+- Combined file upload and search functionalities into a single, unified form.
+- Users can now upload a document and/or submit a search query in the same request.
+- The interface displays both raw search results (from Pinecone) and a conversational response generated via an LLM.
+
+### E. Conversational Response Generation
+- Developed a chat response module that sends a prompt—combining the user’s query and the database search context—to the Ollama API (using the `llama3.2:latest` model) to generate a detailed, conversational response.
+- Both the raw database results and the LLM-generated response are presented to the user.
+
+### F. Rate Limiting & Caching
+- Implemented per-user rate limiting (maximum of 5 requests) to control API usage.
+- Integrated Flask-Caching to speed up responses for repeated queries.
+
+### G. Background Processing
+- Added a background scraper that periodically runs (as a placeholder) to simulate concurrent background tasks.
+
+### H. Code Improvements & Dockerization
+- Replaced a namedtuple with a custom Document class (including a metadata attribute) to ensure compatibility with text-splitting libraries.
+- Provided a Dockerfile and requirements file for containerizing the application and managing dependencies.
+
+---
+
+## 3. Summary
+
+The project evolved from a basic PDF search chatbot into a full-featured document retrieval system that:
+
+- Accepts various file types and processes document uploads.
+- Stores user-specific document embeddings in Pinecone.
+- Provides a unified interface for both document upload and search queries.
+- Uses an LLM (via the Ollama API) to generate conversational responses based on the search results.
+- Implements rate limiting, caching, and background processing to improve overall performance and usability.
+
+This changelog reflects all the significant modifications and enhancements made throughout the development of the DocRec project.
+
+---
+
+You can save this content as `CHANGELOG.txt` (or a similar note file) in your project repository. Let me know if you need any further modifications or additional details!
