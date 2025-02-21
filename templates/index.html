@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Document Retrieval Chatbot</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f4f8;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1, h2, h3 {
+      color: #333;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input[type="text"], input[type="number"], input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #007BFF;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .error, .message {
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 15px;
+    }
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    .message {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    .results, .chat-response {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #e9ecef;
+      border-radius: 4px;
+    }
+    .result-section {
+      margin-bottom: 20px;
+    }
+    .result-item {
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+    }
+    .result-item:last-child {
+      border-bottom: none;
+    }
+    .loading {
+      opacity: 0.7;
+      cursor: wait;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Document Retrieval Chatbot</h1>
+    <!-- Combined Search and Upload Form -->
+    <form method="POST" action="{{ url_for('search') }}" enctype="multipart/form-data" id="mainForm">
+      <div class="form-group">
+        <label for="user_id">User ID:</label>
+        <input type="text" id="user_id" name="user_id" value="{{ user_id or '' }}" required placeholder="Enter your user ID">
+      </div>
+      <div class="form-group">
+        <label for="text">Search Query (or leave blank if only uploading):</label>
+        <input type="text" id="text" name="text" value="{{ last_query or '' }}" placeholder="Enter your search query">
+      </div>
+      <div class="form-group">
+        <label for="threshold">Threshold:</label>
+        <input type="number" step="0.01" id="threshold" name="threshold" value="{{ last_threshold or 0.4 }}" required>
+      </div>
+      <div class="form-group">
+        <label for="file">Upload Document (optional):</label>
+        <input type="file" id="file" name="file">
+      </div>
+      <button type="submit" id="submitButton">Submit</button>
+    </form>
+    
+    {% if error %}
+    <div class="error" role="alert">{{ error }}</div>
+    {% endif %}
+    {% if message %}
+    <div class="message">{{ message }}</div>
+    {% endif %}
+    
+    {% if results %}
+    <div class="results">
+      <h2>Search Results</h2>
+      {% if results.pinecone %}
+      <div class="result-section">
+        <h3>Database Results <span>({{ results.pinecone|length }} results)</span></h3>
+        {% for result in results.pinecone %}
+        <div class="result-item">
+          <p>{{ result.content }}</p>
+          <small>Score: {{ result.score }}</small>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+    
+    {% if chat_response %}
+    <div class="chat-response">
+      <h2>Chatbot Response</h2>
+      <p>{{ chat_response }}</p>
+    </div>
+    {% endif %}
+  </div>
+  
+  <script>
+    document.getElementById('mainForm').addEventListener('submit', function() {
+      const button = document.getElementById('submitButton');
+      button.classList.add('loading');
+      button.textContent = 'Processing...';
+    });
+  </script>
+</body>
+</html>
